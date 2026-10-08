@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Theme.Riposo" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="colorPrimary">@color/riposo_primary</item>
+        <item name="colorPrimaryVariant">@color/riposo_primary_dark</item>
+        <item name="colorOnPrimary">@android:color/white</item>
+        <item name="colorSecondary">@color/riposo_accent</item>
+    </style>
+
+    <style name="Theme.Riposo.Block" parent="Theme.Material3.Dark.NoActionBar">
+        <item name="android:windowBackground">@color/riposo_bg_block</item>
+    </style>
+</resources>

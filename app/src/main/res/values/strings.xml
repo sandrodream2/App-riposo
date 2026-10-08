@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Riposo</string>
+    <string name="accessibility_service_label">Blocco app Riposo</string>
+    <string name="block_title">Tempo di riposo</string>
+    <string name="block_message">Questa app è bloccata fino alle %1$s.\nPrenditi una pausa e riposa un po\'.</string>
+    <string name="go_home">Torna alla schermata iniziale</string>
+    <string name="schedule_section">Programma blocco</string>
+    <string name="start_label">Dalle</string>
+    <string name="end_label">Alle</string>
+    <string name="pick_time">Modifica</string>
+    <string name="enable_schedule">Attiva blocco programmato</string>
+    <string name="disable_schedule">Disattiva blocco programmato</string>
+    <string name="apps_section">App da bloccare</string>
+    <string name="accessibility_section">Servizio di blocco</string>
+    <string name="open_accessibility">Apri impostazioni accessibilità</string>
+    <string name="status_off">Blocco non attivo</string>
+    <string name="status_waiting">Programmato: in attesa dell\'orario</string>
+    <string name="status_active">Blocco attivo</string>
+    <string name="schedule_enabled_toast">Blocco programmato attivato</string>
+    <string name="schedule_disabled_toast">Blocco programmato disattivato</string>
+    <string name="accessibility_needed">Attiva il servizio "Blocco app Riposo" nelle impostazioni di accessibilità per consentire il blocco.</string>
+</resources>
