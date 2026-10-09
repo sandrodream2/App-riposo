@@ -1,6 +1,5 @@
 package com.riposo.app
 
-import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,12 +9,17 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
 class AppPickerAdapter(
-    private val items: List<InstalledApp>
+    private val items: List<InstalledApp>,
+    private val onCountChanged: (Int) -> Unit
 ) : RecyclerView.Adapter<AppPickerAdapter.ViewHolder>() {
 
-    private val checked = Prefs.getBlockedApps(contextRef)
+    private val checked = mutableSetOf<String>()
 
-    lateinit var contextRef: Context
+    fun setInitialBlocked(apps: Set<String>) {
+        checked.clear()
+        checked.addAll(apps)
+        onCountChanged(checked.size)
+    }
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val icon: ImageView = view.findViewById(R.id.appIcon)
@@ -24,7 +28,6 @@ class AppPickerAdapter(
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        contextRef = parent.context
         val view = LayoutInflater.from(parent.context)
             .inflate(R.layout.item_app, parent, false)
         return ViewHolder(view)
@@ -38,6 +41,7 @@ class AppPickerAdapter(
         holder.checkbox.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) checked.add(app.packageName) else checked.remove(app.packageName)
             Prefs.setBlockedApps(holder.checkbox.context, checked)
+            onCountChanged(checked.size)
         }
     }
 
