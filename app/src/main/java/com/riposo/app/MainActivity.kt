@@ -18,6 +18,9 @@ class MainActivity : AppCompatActivity() {
     private lateinit var startText: TextView
     private lateinit var endText: TextView
     private lateinit var statusText: TextView
+    private lateinit var appsCountText: TextView
+    private lateinit var accessibilityStatus: TextView
+    private lateinit var adapter: AppPickerAdapter
 
     private var startHour = 22
     private var startMinute = 0
@@ -38,10 +41,16 @@ class MainActivity : AppCompatActivity() {
         startText = findViewById(R.id.startText)
         endText = findViewById(R.id.endText)
         statusText = findViewById(R.id.statusText)
+        appsCountText = findViewById(R.id.appsCountText)
+        accessibilityStatus = findViewById(R.id.accessibilityStatus)
 
+        adapter = AppPickerAdapter(loadApps(), ::onBlockedAppsChanged)
+        adapter.setInitialBlocked(Prefs.getBlockedApps(this))
         val recycler: RecyclerView = findViewById(R.id.appRecycler)
         recycler.layoutManager = LinearLayoutManager(this)
-        recycler.adapter = AppPickerAdapter(loadApps())
+        recycler.adapter = adapter
+
+        findViewById<TextView>(R.id.motivationText).text = todayMotivation()
 
         updateLabels()
         refreshStatus()
@@ -49,6 +58,13 @@ class MainActivity : AppCompatActivity() {
         findViewById<Button>(R.id.pickStart).setOnClickListener { showTimePicker(true) }
         findViewById<Button>(R.id.pickEnd).setOnClickListener { showTimePicker(false) }
         findViewById<Button>(R.id.toggleSchedule).setOnClickListener { toggleSchedule() }
+        findViewById<Button>(R.id.presetNight).setOnClickListener { applyPreset(22, 0, 7, 0) }
+        findViewById<Button>(R.id.presetStudy).setOnClickListener {
+            val cal = Calendar.getInstance()
+            applyPreset(cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE),
+                (cal.get(Calendar.HOUR_OF_DAY) + 2) % 24, cal.get(Calendar.MINUTE))
+        }
+        findViewById<Button>(R.id.presetDinner).setOnClickListener { applyPreset(20, 0, 22, 0) }
         findViewById<Button>(R.id.openAccessibility).setOnClickListener {
             startActivity(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS))
         }
@@ -57,6 +73,16 @@ class MainActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         refreshStatus()
+    }
+
+    private fun onBlockedAppsChanged(count: Int) {
+        appsCountText.text = getString(R.string.apps_selected, count)
+    }
+
+    private fun todayMotivation(): String {
+        val array = resources.getStringArray(R.array.motivations)
+        val dayOfYear = Calendar.getInstance().get(Calendar.DAY_OF_YEAR)
+        return array[dayOfYear % array.size]
     }
 
     private fun loadApps(): List<InstalledApp> {
@@ -68,6 +94,15 @@ class MainActivity : AppCompatActivity() {
             .filter { it.packageName != packageName }
             .sortedBy { it.label.lowercase() }
             .toList()
+    }
+
+    private fun applyPreset(sh: Int, sm: Int, eh: Int, em: Int) {
+        startHour = sh; startMinute = sm; endHour = eh; endMinute = em
+        val current = Prefs.getSchedule(this)
+        Prefs.setSchedule(this, BlockSchedule(sh, sm, eh, em, current.enabled))
+        updateLabels()
+        refreshStatus()
+        if (!current.enabled) toggleSchedule()
     }
 
     private fun showTimePicker(isStart: Boolean) {
@@ -109,13 +144,18 @@ class MainActivity : AppCompatActivity() {
         val schedule = Prefs.getSchedule(this)
         val cal = Calendar.getInstance()
         val active = schedule.enabled && schedule.isActive(cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE))
-        statusText.text = getString(
-            if (schedule.enabled) {
-                if (active) R.string.status_active else R.string.status_waiting
-            } else R.string.status_off
-        )
+        statusText.text = when {
+            !schedule.enabled -> getString(R.string.status_off)
+            active -> getString(R.string.status_active) + " — " +
+                getString(R.string.status_until, String.format("%02d:%02d", endHour, endMinute))
+            else -> getString(R.string.status_waiting)
+        }
         val toggle: Button = findViewById(R.id.toggleSchedule)
         toggle.setText(if (schedule.enabled) R.string.disable_schedule else R.string.enable_schedule)
+        appsCountText.text = getString(R.string.apps_selected, Prefs.getBlockedApps(this).size)
+        accessibilityStatus.text =
+            if (isAccessibilityEnabled()) getString(R.string.accessibility_ok)
+            else getString(R.string.open_accessibility)
     }
 
     private fun checkAccessibility() {

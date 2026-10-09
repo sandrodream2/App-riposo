@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="riposo_primary">#3F51B5</color>
-    <color name="riposo_primary_dark">#303F9F</color>
-    <color name="riposo_accent">#FF4081</color>
-    <color name="riposo_bg_block">#121212</color>
+    <color name="riposo_primary">#29B6F6</color>
+    <color name="riposo_primary_dark">#0288D1</color>
+    <color name="riposo_accent">#00E5FF</color>
+    <color name="riposo_bg_block">#0A1220</color>
+    <color name="riposo_card_bg">#F4FBFF</color>
+    <color name="riposo_text_hint">#6B93A8</color>
 </resources>

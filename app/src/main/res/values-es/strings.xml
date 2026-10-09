@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Descanso</string>
+    <string name="made_with">Creada con Mistral Code</string>
+    <string name="accessibility_service_label">Bloqueo de apps Descanso</string>
+    <string name="block_title">Hora de descansar</string>
+    <string name="block_message">Esta app está bloqueada hasta las %1$s.\nTómate un descanso y descansa un poco.</string>
+    <string name="block_countdown">Quedan %1$s para que termine el bloqueo</string>
+    <string name="block_breathing">Ejercicio de respiración</string>
+    <string name="breathing_in">Inhala…</string>
+    <string name="breathing_out">Exhala…</string>
+    <string name="go_home">Volver a la pantalla de inicio</string>
+    <string name="schedule_section">Programar bloqueo</string>
+    <string name="start_label">Desde</string>
+    <string name="end_label">Hasta</string>
+    <string name="pick_time">Modificar</string>
+    <string name="enable_schedule">Activar bloqueo programado</string>
+    <string name="disable_schedule">Desactivar bloqueo programado</string>
+    <string name="apps_section">Apps a bloquear</string>
+    <string name="apps_selected">%1$d apps seleccionadas</string>
+    <string name="accessibility_section">Servicio de bloqueo</string>
+    <string name="open_accessibility">Abrir ajustes de accesibilidad</string>
+    <string name="accessibility_ok">Servicio activo ✓</string>
+    <string name="status_off">Bloqueo no activo</string>
+    <string name="status_waiting">Programado: esperando el horario</string>
+    <string name="status_active">Bloqueo activo</string>
+    <string name="status_until">activo hasta las %1$s</string>
+    <string name="presets_section">Programas rápidos</string>
+    <string name="preset_night">Descanso nocturno</string>
+    <string name="preset_study">Estudio concentrado</string>
+    <string name="preset_dinner">Hora de la cena</string>
+    <string name="schedule_enabled_toast">Bloqueo programado activado</string>
+    <string name="schedule_disabled_toast">Bloqueo programado desactivado</string>
+    <string name="accessibility_needed">Activa el servicio "Bloqueo de apps Descanso" en los ajustes de accesibilidad para permitir el bloqueo.</string>
+    <string name="motivation_title">Pensamiento del día</string>
+    <string-array name="motivations">
+        <item>La mejor manera de recuperar energía es tomarse un descanso de verdad.</item>
+        <item>El descanso no es tiempo perdido: es el secreto de las ideas claras.</item>
+        <item>Desconectarse es el regalo más simple que puedes darte.</item>
+        <item>Un día sin notificaciones es un día completamente tuyo.</item>
+        <item>Dormir bien esta noche significa estar lúcido mañana.</item>
+        <item>Las mejores cosas pasan cuando dejas el teléfono.</item>
+    </string-array>
+</resources>
