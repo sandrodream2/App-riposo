@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Descanso</string>
+    <string name="accessibility_service_label">Bloqueo de apps Descanso</string>
+    <string name="block_title">Hora de descansar</string>
+    <string name="block_message">Esta app está bloqueada hasta las %1$s.\nTómate un descanso y descansa un poco.</string>
+    <string name="go_home">Volver a la pantalla de inicio</string>
+    <string name="schedule_section">Programar bloqueo</string>
+    <string name="start_label">Desde</string>
+    <string name="end_label">Hasta</string>
+    <string name="pick_time">Modificar</string>
+    <string name="enable_schedule">Activar bloqueo programado</string>
+    <string name="disable_schedule">Desactivar bloqueo programado</string>
+    <string name="apps_section">Apps a bloquear</string>
+    <string name="accessibility_section">Servicio de bloqueo</string>
+    <string name="open_accessibility">Abrir ajustes de accesibilidad</string>
+    <string name="status_off">Bloqueo no activo</string>
+    <string name="status_waiting">Programado: esperando el horario</string>
+    <string name="status_active">Bloqueo activo</string>
+    <string name="schedule_enabled_toast">Bloqueo programado activado</string>
+    <string name="schedule_disabled_toast">Bloqueo programado desactivado</string>
+    <string name="accessibility_needed">Activa el servicio "Bloqueo de apps Descanso" en los ajustes de accesibilidad para permitir el bloqueo.</string>
+</resources>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Rest</string>
+    <string name="accessibility_service_label">Rest app blocker</string>
+    <string name="block_title">Time to rest</string>
+    <string name="block_message">This app is blocked until %1$s.\nTake a break and get some rest.</string>
+    <string name="go_home">Go back to home screen</string>
+    <string name="schedule_section">Schedule blocking</string>
+    <string name="start_label">From</string>
+    <string name="end_label">Until</string>
+    <string name="pick_time">Edit</string>
+    <string name="enable_schedule">Enable scheduled blocking</string>
+    <string name="disable_schedule">Disable scheduled blocking</string>
+    <string name="apps_section">Apps to block</string>
+    <string name="accessibility_section">Blocking service</string>
+    <string name="open_accessibility">Open accessibility settings</string>
+    <string name="status_off">Blocking inactive</string>
+    <string name="status_waiting">Scheduled: waiting for the time window</string>
+    <string name="status_active">Blocking active</string>
+    <string name="schedule_enabled_toast">Scheduled blocking enabled</string>
+    <string name="schedule_disabled_toast">Scheduled blocking disabled</string>
+    <string name="accessibility_needed">Enable the "Rest app blocker" service in the accessibility settings to allow blocking.</string>
+</resources>

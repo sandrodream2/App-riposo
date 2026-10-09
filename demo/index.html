@@ -41,47 +41,49 @@
   #appScreen { position:absolute; inset:0; display:none; flex-direction:column; z-index:9; }
   #appScreen .app-header { padding:16px; font-weight:600; font-size:16px; color:#fff; }
   #appScreen .app-body { flex:1; display:flex; align-items:center; justify-content:center; color:#888; font-size:15px; background:#fafafa; }
+  .lang-bar select { border:1px solid #ccc; border-radius:8px; padding:3px 6px; font-size:12px; background:#fff; }
   .hint { font-size:12px; color:#999; margin-top:6px; line-height:1.4; }
 </style>
 </head>
 <body>
 <div id="phone">
-  <div class="toolbar">Riposo</div>
+  <div class="toolbar" id="appName">Riposo</div>
   <div class="clock-bar">
-    <span>Orologio simulato: <b id="simClock">22:00</b></span>
-    <span><input type="checkbox" id="useRealClock" style="accent-color:var(--primary)"> usa ora reale</span>
+    <span id="lblSimClock">Orologio simulato: <b id="simClock">22:00</b></span>
+    <span><input type="checkbox" id="useRealClock" style="accent-color:var(--primary)"> <span id="lblRealClock">usa ora reale</span></span>
+    <span><select id="langSelect"><option value="it">Italiano</option><option value="en">English</option><option value="es">Español</option></select></span>
   </div>
   <div class="scroll">
-    <div class="section-title">Programma blocco</div>
+    <div class="section-title" id="secSchedule">Programma blocco</div>
     <div class="time-row">
       <div class="time-box">
-        <label>Dalle</label>
+        <label id="lblFrom">Dalle</label>
         <input type="time" id="startTime" value="22:00">
       </div>
       <div class="time-box">
-        <label>Alle</label>
+        <label id="lblUntil">Alle</label>
         <input type="time" id="endTime" value="07:00">
       </div>
     </div>
-    <button class="btn btn-primary" id="toggleSchedule">Attiva blocco programmato</button>
+    <button class="btn btn-primary" id="toggleSchedule" data-yes="Attiva blocco programmato">Attiva blocco programmato</button>
     <div class="status" id="statusText">Blocco non attivo</div>
 
-    <div class="section-title">App da bloccare</div>
-    <div class="hint">Tocca un'app per "aprirla": se è bloccata e l'orario è attivo, vedrai la schermata di blocco.</div>
+    <div class="section-title" id="secApps">App da bloccare</div>
+    <div class="hint"><span id="hintApps">Tocca un'app per "aprirla": se è bloccata e l'orario è attivo, vedrai la schermata di blocco.</span></div>
     <div class="app-list" id="appList" style="margin-top:8px"></div>
 
-    <div class="section-title">Servizio di blocco</div>
-    <div class="hint">Nell'app Android questa sezione apre le impostazioni di accessibilità. In questa demo il servizio è sempre attivo.</div>
+    <div class="section-title" id="secService">Servizio di blocco</div>
+    <div class="hint"><span id="hintService">Nell'app Android questa sezione apre le impostazioni di accessibilità. In questa demo il servizio è sempre attivo.</span></div>
   </div>
 
   <div id="appScreen">
     <div class="app-header" id="appHeader"></div>
-    <div class="app-body">Contenuto dell'app simulata…</div>
+    <div class="app-body" id="appBody">Contenuto dell'app simulata…</div>
   </div>
 
   <div id="blockScreen">
     <div class="lock-emoji">🔒</div>
-    <h2>Tempo di riposo</h2>
+    <h2 id="blockTitle">Tempo di riposo</h2>
     <p id="blockMessage"></p>
     <button id="homeBtn">Torna alla schermata iniziale</button>
   </div>
@@ -109,6 +111,59 @@ const state = {
 };
 
 const $=id=>document.getElementById(id);
+
+const I18N = {
+  it:{ app:'Riposo', from:'Dalle', until:'Alle', enable:'Attiva blocco programmato', disable:'Disattiva blocco programmato',
+       off:'Blocco non attivo', waiting:"Programmato: in attesa dell'orario", active:'Blocco attivo',
+       schedule:'Programma blocco', apps:'App da bloccare', service:'Servizio di blocco',
+       hintApps:'Tocca un\'app per "aprirla": se è bloccata e l\'orario è attivo, vedrai la schermata di blocco.',
+       hintService:"Nell\'app Android questa sezione apre le impostazioni di accessibilità. In questa demo il servizio è sempre attivo.",
+       clock:'Orologio simulato:', realClock:'usa ora reale',
+       blockTitle:'Tempo di riposo', home:'Torna alla schermata iniziale',
+       blockedMsg:(end)=>`Questa app è bloccata fino alle ${end}.\nPrenditi una pausa e riposa un po'.`,
+       appBody:'Contenuto dell\'app simulata…' },
+  en:{ app:'Rest', from:'From', until:'Until', enable:'Enable scheduled blocking', disable:'Disable scheduled blocking',
+       off:'Blocking inactive', waiting:'Scheduled: waiting for the time window', active:'Blocking active',
+       schedule:'Schedule blocking', apps:'Apps to block', service:'Blocking service',
+       hintApps:'Tap an app to "open" it: if it is blocked and the time window is active, you will see the block screen.',
+       hintService:'In the Android app this section opens the accessibility settings. In this demo the service is always on.',
+       clock:'Simulated clock:', realClock:'use real time',
+       blockTitle:'Time to rest', home:'Go back to home screen',
+       blockedMsg:(end)=>`This app is blocked until ${end}.\nTake a break and get some rest.`,
+       appBody:'Simulated app content…' },
+  es:{ app:'Descanso', from:'Desde', until:'Hasta', enable:'Activar bloqueo programado', disable:'Desactivar bloqueo programado',
+       off:'Bloqueo no activo', waiting:'Programado: esperando el horario', active:'Bloqueo activo',
+       schedule:'Programar bloqueo', apps:'Apps a bloquear', service:'Servicio de bloqueo',
+       hintApps:'Toca una app para "abrirla": si está bloqueada y el horario está activo, verás la pantalla de bloqueo.',
+       hintService:'En la app de Android esta sección abre los ajustes de accesibilidad. En esta demo el servicio está siempre activo.',
+       clock:'Reloj simulado:', realClock:'usar hora real',
+       blockTitle:'Hora de descansar', home:'Volver a la pantalla de inicio',
+       blockedMsg:(end)=>`Esta app está bloqueada hasta las ${end}.\nTómate un descanso y descansa un poco.`,
+       appBody:'Contenido de la app simulada…' }
+};
+let lang = localStorage.getItem('riposo_lang') || 'it';
+const T = () => I18N[lang];
+
+function applyLang(){
+  const t=T();
+  document.documentElement.lang = lang;
+  $('appName').textContent=t.app;
+  document.title=t.app+' — Demo';
+  $('lblFrom').textContent=t.from;
+  $('lblUntil').textContent=t.until;
+  $('secSchedule').textContent=t.schedule;
+  $('secApps').textContent=t.apps;
+  $('secService').textContent=t.service;
+  $('hintApps').textContent=t.hintApps;
+  $('hintService').textContent=t.hintService;
+  $('lblSimClock').childNodes[0].textContent=t.clock+' ';
+  $('lblRealClock').textContent=t.realClock;
+  $('blockTitle').textContent=t.blockTitle;
+  $('homeBtn').textContent=t.home;
+  $('langSelect').value=lang;
+  renderStatus();
+}
+
 
 function parseTime(v){ const [h,m]=v.split(':').map(Number); return {h,m}; }
 function fmt({h,m}){ return String(h).padStart(2,'0')+':'+String(m).padStart(2,'0'); }
@@ -148,10 +203,11 @@ function renderClock(){
 
 function renderStatus(){
   const el=$('statusText'), btn=$('toggleSchedule');
-  if(!state.enabled){ el.textContent='Blocco non attivo'; }
-  else if(scheduleActive()){ el.textContent='Blocco attivo'; }
-  else { el.textContent="Programmato: in attesa dell'orario"; }
-  btn.textContent=state.enabled?'Disattiva blocco programmato':'Attiva blocco programmato';
+  const t=T();
+  if(!state.enabled){ el.textContent=t.off; }
+  else if(scheduleActive()){ el.textContent=t.active; }
+  else { el.textContent=t.waiting; }
+  btn.textContent=state.enabled?t.disable:t.enable;
 }
 
 function renderApps(){
@@ -176,12 +232,12 @@ function renderApps(){
 
 function openApp(app){
   if(state.blocked.has(app.name) && scheduleActive()){
-    $('blockMessage').textContent=
-      `Questa app è bloccata fino alle ${fmt(state.end)}.\nPrenditi una pausa e riposa un po'.`;
+    $('blockMessage').textContent=T().blockedMsg(fmt(state.end));
     $('blockScreen').style.display='flex';
   } else {
     $('appHeader').textContent=app.name;
     $('appHeader').style.background=app.color;
+    $('appBody').textContent=T().appBody;
     $('appScreen').style.display='flex';
   }
 }
@@ -199,12 +255,19 @@ $('homeBtn').addEventListener('click',()=>{
 });
 $('useRealClock').addEventListener('change',e=>{ state.realClock=e.target.checked; renderAll(); });
 
+$('langSelect').addEventListener('change',e=>{
+  lang=e.target.value;
+  localStorage.setItem('riposo_lang',lang);
+  applyLang();
+});
+
 setInterval(()=>{ state.simMinutes=(state.simMinutes+1)%1440; renderClock(); renderStatus(); },3000);
 
 load();
 $('startTime').value=fmt(state.start);
 $('endTime').value=fmt(state.end);
 renderAll();
+applyLang();
 </script>
 </body>
 </html>
