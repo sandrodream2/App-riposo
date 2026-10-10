@@ -1,7 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="riposo_primary">#3F51B5</color>
-    <color name="riposo_primary_dark">#303F9F</color>
-    <color name="riposo_accent">#FF4081</color>
-    <color name="riposo_bg_block">#121212</color>
+    <color name="riposo_black">#000000</color>
+    <color name="riposo_surface">#0E0E10</color>
+    <color name="riposo_surface_alt">#1A1A1E</color>
+    <color name="riposo_primary">#8C9EFF</color>
+    <color name="riposo_primary_dark">#5C6BC0</color>
+    <color name="riposo_accent">#FF8A80</color>
+    <color name="riposo_green">#69F0AE</color>
+    <color name="riposo_text">#F2F2F4</color>
+    <color name="riposo_text_dim">#9E9EA6</color>
+    <color name="riposo_bg_block">#000000</color>
+    <color name="riposo_stroke">#2A2A30</color>
 </resources>

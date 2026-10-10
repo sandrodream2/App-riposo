@@ -8,10 +8,6 @@ import java.util.Calendar
 
 class AppBlockService : AccessibilityService() {
 
-    companion object {
-        const val ACTION_CHECK = "com.riposo.app.CHECK"
-    }
-
     override fun onServiceConnected() {
         super.onServiceConnected()
         serviceInfo = AccessibilityServiceInfo().apply {
@@ -31,30 +27,28 @@ class AppBlockService : AccessibilityService() {
 
     override fun onInterrupt() {}
 
-    override fun onUnbind(intent: Intent?): Boolean {
-        return super.onUnbind(intent)
-    }
-
     private fun checkPackage(pkg: String) {
-        if (!BlockState.isBlocking(this)) {
-            if (Prefs.getBlockedApps(this).contains(pkg) && isScheduleActive()) {
-                BlockState.setBlocking(this, true)
-                launchBlock(pkg)
-            }
-            return
-        }
-        if (Prefs.getBlockedApps(this).contains(pkg) && isScheduleActive()) {
+        if (shouldBlock(pkg)) {
+            if (!BlockState.isBlocking(this)) BlockState.setBlocking(this, true)
             launchBlock(pkg)
         } else {
-            BlockState.setBlocking(this, false)
+            if (BlockState.isBlocking(this)) BlockState.setBlocking(this, false)
         }
     }
 
-    private fun isScheduleActive(): Boolean {
+    private fun shouldBlock(pkg: String): Boolean {
+        if (Prefs.isImmediateBlockActive(this)) {
+            val pkgs = Prefs.getImmediateBlockPackages(this)
+            if (pkgs.contains(pkg)) return true
+        }
+        if (Prefs.isDumbphoneActive(this)) {
+            return !Prefs.allowedDuringDumbphone(this, pkg)
+        }
         val schedule = Prefs.getSchedule(this)
         if (!schedule.enabled) return false
         val cal = Calendar.getInstance()
-        return schedule.isActive(cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE))
+        return schedule.isActive(cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE)) &&
+            Prefs.getBlockedApps(this).contains(pkg)
     }
 
     private fun launchBlock(pkg: String) {
