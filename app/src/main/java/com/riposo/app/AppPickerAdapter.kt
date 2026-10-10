@@ -10,12 +10,24 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
 class AppPickerAdapter(
-    private val items: List<InstalledApp>
+    private val items: List<InstalledApp>,
+    private val onCheckedChange: () -> Unit
 ) : RecyclerView.Adapter<AppPickerAdapter.ViewHolder>() {
 
-    private val checked = Prefs.getBlockedApps(contextRef)
+    private var context: Context? = null
+    private var visible: List<InstalledApp> = items
 
-    lateinit var contextRef: Context
+    fun allApps(): List<InstalledApp> = items
+
+    fun filter(query: String) {
+        val q = query.trim().lowercase()
+        visible = if (q.isEmpty()) items else items.filter { it.label.lowercase().contains(q) }
+        notifyDataSetChanged()
+    }
+
+    fun refreshChecks() {
+        notifyDataSetChanged()
+    }
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val icon: ImageView = view.findViewById(R.id.appIcon)
@@ -24,22 +36,26 @@ class AppPickerAdapter(
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        contextRef = parent.context
+        context = parent.context
         val view = LayoutInflater.from(parent.context)
             .inflate(R.layout.item_app, parent, false)
         return ViewHolder(view)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val app = items[position]
+        val app = visible[position]
+        val ctx = holder.checkbox.context
         holder.icon.setImageDrawable(app.icon)
         holder.name.text = app.label
-        holder.checkbox.isChecked = checked.contains(app.packageName)
+        holder.checkbox.isChecked = Prefs.getBlockedApps(ctx).contains(app.packageName)
         holder.checkbox.setOnCheckedChangeListener { _, isChecked ->
-            if (isChecked) checked.add(app.packageName) else checked.remove(app.packageName)
-            Prefs.setBlockedApps(holder.checkbox.context, checked)
+            val blocked = Prefs.getBlockedApps(ctx)
+            if (isChecked) blocked.add(app.packageName) else blocked.remove(app.packageName)
+            Prefs.setBlockedApps(ctx, blocked)
+            onCheckedChange()
         }
+        holder.itemView.setOnClickListener { holder.checkbox.toggle() }
     }
 
-    override fun getItemCount() = items.size
+    override fun getItemCount() = visible.size
 }
