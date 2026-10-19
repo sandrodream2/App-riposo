@@ -4,7 +4,8 @@ import android.content.Intent
 import android.content.pm.ApplicationInfo
 import android.os.Bundle
 import android.provider.Settings
-import android.text.TextUtils
+import android.text.Editable
+import android.text.TextWatcher
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
@@ -14,11 +15,11 @@ import androidx.recyclerview.widget.RecyclerView
 import java.util.Calendar
 
 class MainActivity : AppCompatActivity() {
-
     private lateinit var startText: TextView
     private lateinit var endText: TextView
     private lateinit var statusText: TextView
-
+    private lateinit var blockedCountText: TextView
+    private lateinit var adapter: AppPickerAdapter
     private var startHour = 22
     private var startMinute = 0
     private var endHour = 7
@@ -28,27 +29,54 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         setSupportActionBar(findViewById(R.id.toolbar))
-
         val schedule = Prefs.getSchedule(this)
         startHour = schedule.startHour
         startMinute = schedule.startMinute
         endHour = schedule.endHour
         endMinute = schedule.endMinute
-
         startText = findViewById(R.id.startText)
         endText = findViewById(R.id.endText)
         statusText = findViewById(R.id.statusText)
-
+        blockedCountText = findViewById(R.id.blockedCountText)
         val recycler: RecyclerView = findViewById(R.id.appRecycler)
         recycler.layoutManager = LinearLayoutManager(this)
-        recycler.adapter = AppPickerAdapter(loadApps())
-
+        adapter = AppPickerAdapter(loadApps()) { updateBlockedCount() }
+        recycler.adapter = adapter
+        val searchInput = findViewById<android.widget.EditText>(R.id.searchInput)
+        searchInput.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, a: Int, b: Int, c: Int) {}
+            override fun onTextChanged(s: CharSequence?, a: Int, b: Int, c: Int) {}
+            override fun afterTextChanged(s: Editable?) {
+                adapter.filter(s?.toString() ?: "")
+            }
+        })
         updateLabels()
         refreshStatus()
-
+        updateBlockedCount()
         findViewById<Button>(R.id.pickStart).setOnClickListener { showTimePicker(true) }
         findViewById<Button>(R.id.pickEnd).setOnClickListener { showTimePicker(false) }
         findViewById<Button>(R.id.toggleSchedule).setOnClickListener { toggleSchedule() }
+        findViewById<Button>(R.id.blockNow15).setOnClickListener { startImmediateBlock(15) }
+        findViewById<Button>(R.id.blockNow30).setOnClickListener { startImmediateBlock(30) }
+        findViewById<Button>(R.id.blockNow60).setOnClickListener { startImmediateBlock(60) }
+        findViewById<Button>(R.id.selectAllButton).setOnClickListener {
+            Prefs.setBlockedApps(this, adapter.allApps().map { it.packageName }.toSet())
+            adapter.refreshChecks()
+            updateBlockedCount()
+        }
+        findViewById<Button>(R.id.clearAllButton).setOnClickListener {
+            Prefs.setBlockedApps(this, emptySet())
+            adapter.refreshChecks()
+            updateBlockedCount()
+        }
+        val dumbphoneSwitch = findViewById<com.google.android.material.materialswitch.MaterialSwitch>(R.id.dumbphoneSwitch)
+        dumbphoneSwitch.isChecked = Prefs.isDumbphoneEnabled(this)
+        dumbphoneSwitch.setOnCheckedChangeListener { _, checked ->
+            Prefs.setDumbphoneEnabled(this, checked)
+            val msg = if (checked) R.string.dumbphone_enabled_toast else R.string.dumbphone_disabled_toast
+            Toast.makeText(this, msg, Toast.LENGTH_SHORT).show()
+            if (checked) checkAccessibility()
+        }
         findViewById<Button>(R.id.openAccessibility).setOnClickListener {
             startActivity(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS))
         }
@@ -95,6 +123,13 @@ class MainActivity : AppCompatActivity() {
         if (newEnabled) checkAccessibility()
     }
 
+    private fun startImmediateBlock(minutes: Int) {
+        Prefs.setImmediateBlockEnd(this, System.currentTimeMillis() + minutes * 60_000L)
+        Prefs.setImmediateBlockPackages(this, Prefs.getBlockedApps(this))
+        Toast.makeText(this, getString(R.string.block_now_toast, "$minutes"), Toast.LENGTH_SHORT).show()
+        checkAccessibility()
+    }
+
     private fun saveSchedule() {
         val current = Prefs.getSchedule(this)
         Prefs.setSchedule(this, BlockSchedule(startHour, startMinute, endHour, endMinute, current.enabled))
@@ -111,11 +146,18 @@ class MainActivity : AppCompatActivity() {
         val active = schedule.enabled && schedule.isActive(cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE))
         statusText.text = getString(
             if (schedule.enabled) {
-                if (active) R.string.status_active else R.string.status_waiting
-            } else R.string.status_off
+                if (active) R.string.status_active_until else R.string.status_waiting
+            } else R.string.status_off,
+            String.format("%02d:%02d", schedule.endHour, schedule.endMinute)
         )
-        val toggle: Button = findViewById(R.id.toggleSchedule)
-        toggle.setText(if (schedule.enabled) R.string.disable_schedule else R.string.enable_schedule)
+        findViewById<Button>(R.id.toggleSchedule).setText(
+            if (schedule.enabled) R.string.disable_schedule else R.string.enable_schedule
+        )
+    }
+
+    private fun updateBlockedCount() {
+        val count = Prefs.getBlockedApps(this).size
+        blockedCountText.text = getString(R.string.blocked_count, count)
     }
 
     private fun checkAccessibility() {
@@ -127,6 +169,6 @@ class MainActivity : AppCompatActivity() {
 
     private fun isAccessibilityEnabled(): Boolean {
         val setting = Settings.Secure.getString(contentResolver, Settings.Secure.ENABLED_ACCESSIBILITY_SERVICES)
-        return !TextUtils.isEmpty(setting) && setting.contains("$packageName/AppBlockService")
+        return !setting.isNullOrEmpty() && setting.contains("$packageName/AppBlockService")
     }
 }

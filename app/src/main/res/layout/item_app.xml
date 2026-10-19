@@ -4,12 +4,14 @@
     android:layout_height="wrap_content"
     android:orientation="horizontal"
     android:gravity="center_vertical"
-    android:padding="12dp">
+    android:padding="14dp"
+    android:layout_marginBottom="8dp"
+    android:background="@drawable/bg_card">
 
     <ImageView
         android:id="@+id/appIcon"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
+        android:layout_width="42dp"
+        android:layout_height="42dp"
         android:contentDescription="@null" />
 
     <TextView
@@ -18,10 +20,12 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:layout_marginStart="16dp"
-        android:textAppearance="?attr/textAppearanceBodyLarge" />
+        android:textAppearance="?attr/textAppearanceBodyLarge"
+        android:textColor="@color/riposo_text" />
 
     <CheckBox
         android:id="@+id/appCheckbox"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:buttonTint="@color/riposo_primary" />
 </LinearLayout>

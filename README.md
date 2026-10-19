@@ -1,18 +1,23 @@
 # App Riposo
 
-Applicazione Android (Kotlin) che consente di programmare il blocco di applicazioni scelte dall'utente in una fascia oraria definita, per favorire il riposo dal troppo utilizzo dello smartphone.
+Applicazione Android (Kotlin) con interfaccia moderna a fondo nero (AMOLED) che consente di programmare il blocco di applicazioni scelte dall'utente in una fascia oraria definita, per favorire il riposo dal troppo utilizzo dello smartphone.
 
 ## Funzionalità
 
-- Selezione delle app da bloccare (lista app installate con checkbox).
+- **Tema nero AMOLED** con card scure, pulsanti arrotondati e accenti viola/corallo.
+- Selezione delle app da bloccare con **ricerca**, conteggio app selezionate e azioni **blocca tutte / deseleziona tutto**.
 - Programmazione della fascia oraria (es. 22:00 – 07:00), con supporto per fasce a cavallo di mezzanotte.
 - Attivazione/disattivazione del blocco programmato con un solo pulsante.
-- Quando la fascia oraria è attiva, aprendo un'app bloccata viene mostrata una schermata di blocco che invita al riposo.
+- **Blocco immediato**: blocca le app selezionate per 15 minuti, 30 minuti o 1 ora.
+- **Modalità telefono semplice (dumbphone)**: durante la fascia oraria trasforma lo smartphone in un semplice telefono, lasciando disponibili solo telefono, messaggi, orologio e impostazioni.
+- **Schermata di blocco** con messaggio, orario di fine blocco e **countdown** in tempo reale.
 - Servizio di accessibilità interno all'app (nessun permesso privacy-richiesto oltre alla visibilità delle finestre).
 
 ## Come funziona
 
-L'app usa un `AccessibilityService` (`AppBlockService`) che ascolta gli eventi `TYPE_WINDOW_STATE_CHANGED`: quando l'utente apre un'app nella lista bloccati durante la fascia oraria programmata, viene lanciata `BlockActivity` a schermo intero. Quando la fascia oraria termina, il blocco si interrompe automaticamente.
+L'app usa un `AccessibilityService` (`AppBlockService`) che ascolta gli eventi `TYPE_WINDOW_STATE_CHANGED`: quando l'utente apre un'app bloccata durante la fascia oraria programmata (o durante un blocco immediato, o in modalità telefono semplice), viene lanciata `BlockActivity` a schermo intero con countdown. Quando la fascia oraria termina, il blocco si interrompe automaticamente.
+
+In **modalità telefono semplice** tutte le app vengono bloccate tranne telefono, messaggi, orologio, impostazioni e App Riposo stessa.
 
 ## Installazione
 

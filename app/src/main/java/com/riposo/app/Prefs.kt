@@ -24,6 +24,10 @@ data class BlockSchedule(
 
 object Prefs {
     private const val FILE = "riposo_prefs"
+    private const val DEFAULT_HOME = "com.android.dialer"
+    private const val DEFAULT_MESSAGES = "com.google.android.apps.messaging"
+    private const val DEFAULT_CLOCK = "com.google.android.deskclock"
+    private const val DEFAULT_SETTINGS = "com.android.settings"
 
     private fun prefs(ctx: Context): SharedPreferences =
         ctx.getSharedPreferences(FILE, Context.MODE_PRIVATE)
@@ -53,9 +57,49 @@ object Prefs {
             .apply()
     }
 
-    fun getIgnoreBatteryOptimizationHintShown(ctx: Context): Boolean =
-        prefs(ctx).getBoolean("battery_hint_shown", false)
+    fun isDumbphoneEnabled(ctx: Context): Boolean =
+        prefs(ctx).getBoolean("dumbphone_enabled", false)
 
-    fun setIgnoreBatteryOptimizationHintShown(ctx: Context) =
-        prefs(ctx).edit().putBoolean("battery_hint_shown", true).apply()
+    fun setDumbphoneEnabled(ctx: Context, value: Boolean) =
+        prefs(ctx).edit().putBoolean("dumbphone_enabled", value).apply()
+
+    fun getImmediateBlockEnd(ctx: Context): Long =
+        prefs(ctx).getLong("immediate_block_end", 0L)
+
+    fun setImmediateBlockEnd(ctx: Context, endMillis: Long) =
+        prefs(ctx).edit().putLong("immediate_block_end", endMillis).apply()
+
+    fun getImmediateBlockPackages(ctx: Context): Set<String> =
+        prefs(ctx).getStringSet("immediate_block_packages", emptySet())!!
+
+    fun setImmediateBlockPackages(ctx: Context, packages: Set<String>) =
+        prefs(ctx).edit().putStringSet("immediate_block_packages", packages).apply()
+
+    fun isDumbphoneActive(ctx: Context): Boolean {
+        if (!isDumbphoneEnabled(ctx)) return false
+        val schedule = getSchedule(ctx)
+        val cal = java.util.Calendar.getInstance()
+        return schedule.isActive(cal.get(java.util.Calendar.HOUR_OF_DAY), cal.get(java.util.Calendar.MINUTE))
+    }
+
+    fun isImmediateBlockActive(ctx: Context): Boolean =
+        System.currentTimeMillis() < getImmediateBlockEnd(ctx)
+
+    fun allowedDuringDumbphone(ctx: Context, pkg: String): Boolean {
+        val allowed = setOf(
+            DEFAULT_HOME.takeIf { it.isNotEmpty() },
+            "com.android.phone",
+            "com.android.contacts",
+            "com.android.dialer",
+            DEFAULT_MESSAGES,
+            "com.android.mms",
+            DEFAULT_CLOCK,
+            "com.android.deskclock",
+            "com.sec.android.app.clockpackage",
+            DEFAULT_SETTINGS,
+            "com.android.settings",
+            ctx.packageName
+        )
+        return allowed.contains(pkg) || pkg.startsWith("com.android.")
+    }
 }
