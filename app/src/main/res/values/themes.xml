@@ -5,9 +5,13 @@
         <item name="colorPrimaryVariant">@color/riposo_primary_dark</item>
         <item name="colorOnPrimary">@android:color/white</item>
         <item name="colorSecondary">@color/riposo_accent</item>
+        <item name="colorSurface">@color/riposo_card_bg</item>
+        <item name="android:statusBarColor">@color/riposo_primary_dark</item>
     </style>
 
     <style name="Theme.Riposo.Block" parent="Theme.Material3.Dark.NoActionBar">
         <item name="android:windowBackground">@color/riposo_bg_block</item>
+        <item name="android:statusBarColor">@color/riposo_bg_block</item>
+        <item name="android:navigationBarColor">@color/riposo_bg_block</item>
     </style>
 </resources>

@@ -1,9 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Riposo</string>
+    <string name="made_with">Realizzata con Mistral Code</string>
     <string name="accessibility_service_label">Blocco app Riposo</string>
     <string name="block_title">Tempo di riposo</string>
     <string name="block_message">Questa app è bloccata fino alle %1$s.\nPrenditi una pausa e riposa un po\'.</string>
+    <string name="block_countdown">Mancano %1$s al termine del blocco</string>
+    <string name="block_breathing">Esercizio di respirazione</string>
+    <string name="breathing_in">Inspira…</string>
+    <string name="breathing_out">Espira…</string>
     <string name="go_home">Torna alla schermata iniziale</string>
     <string name="schedule_section">Programma blocco</string>
     <string name="start_label">Dalle</string>
@@ -12,12 +17,28 @@
     <string name="enable_schedule">Attiva blocco programmato</string>
     <string name="disable_schedule">Disattiva blocco programmato</string>
     <string name="apps_section">App da bloccare</string>
+    <string name="apps_selected">%1$d app selezionate</string>
     <string name="accessibility_section">Servizio di blocco</string>
     <string name="open_accessibility">Apri impostazioni accessibilità</string>
+    <string name="accessibility_ok">Servizio attivo ✓</string>
     <string name="status_off">Blocco non attivo</string>
     <string name="status_waiting">Programmato: in attesa dell\'orario</string>
     <string name="status_active">Blocco attivo</string>
+    <string name="status_until">attivo fino alle %1$s</string>
+    <string name="presets_section">Programmi rapidi</string>
+    <string name="preset_night">Riposo notturno</string>
+    <string name="preset_study">Studio concentrato</string>
+    <string name="preset_dinner">Ora della cena</string>
     <string name="schedule_enabled_toast">Blocco programmato attivato</string>
     <string name="schedule_disabled_toast">Blocco programmato disattivato</string>
     <string name="accessibility_needed">Attiva il servizio "Blocco app Riposo" nelle impostazioni di accessibilità per consentire il blocco.</string>
+    <string name="motivation_title">Pensiero del giorno</string>
+    <string-array name="motivations">
+        <item>Il miglior modo per ritrovare energia è concedersi una pausa vera.</item>
+        <item>Il riposo non è tempo perso: è il segreto delle idee chiare.</item>
+        <item>Staccare dallo schermo è il regalo più semplice che puoi farti.</item>
+        <item>Un giorno senza notifiche è un giorno tutto tuo.</item>
+        <item>Dormire bene stasera significa essere lucidi domani.</item>
+        <item>Le cose migliori succedono quando metti giù il telefono.</item>
+    </string-array>
 </resources>

@@ -18,7 +18,7 @@
         android:layout_marginTop="16dp"
         android:text="@string/block_title"
         android:textAppearance="?attr/textAppearanceHeadlineMedium"
-        android:textColor="@android:color/white" />
+        android:textColor="@color/riposo_primary" />
 
     <TextView
         android:id="@+id/messageText"
@@ -28,6 +28,30 @@
         android:gravity="center"
         android:textColor="@android:color/white"
         android:textAppearance="?attr/textAppearanceBodyLarge" />
+
+    <TextView
+        android:id="@+id/countdownText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:textColor="@color/riposo_accent"
+        android:textAppearance="?attr/textAppearanceTitleMedium" />
+
+    <Button
+        android:id="@+id/breathingButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:text="@string/block_breathing" />
+
+    <TextView
+        android:id="@+id/breathingText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:textColor="@color/riposo_accent"
+        android:textAppearance="?attr/textAppearanceHeadlineSmall"
+        android:visibility="gone" />
 
     <Button
         android:id="@+id/homeButton"

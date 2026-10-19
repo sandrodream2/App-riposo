@@ -17,7 +17,7 @@ class AppBlockService : AccessibilityService() {
         serviceInfo = AccessibilityServiceInfo().apply {
             eventTypes = AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED
             feedbackType = AccessibilityServiceInfo.FEEDBACK_GENERIC
-            flags = AccessibilityServiceInfo.FLAG_DEFAULT
+            flags = AccessibilityServiceInfo.DEFAULT
             notificationTimeout = 100
         }
     }
